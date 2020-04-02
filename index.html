@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>GIS应急指挥系统</title>
+    <link rel='stylesheet' href='js/bs/css/bootstrap.css'>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script src='js/bs/js/bootstrap.js'></script>
+    <script src="dist/leaflet/include-leaflet.js"></script>
+  </head>
+  <style>
+	font-family:微软雅黑
+		* {
+		margin:0;
+		padding:0
+	}
+	#anniu button {
+		width:100px;
+		height:40px;
+	}
+	#btn {
+		width:40px;
+		left:350px;
+		height:140px;
+		border:0;
+		border-left:1px solid rgb(23,32,43,0.2);
+		background:#f8f8f8;
+		color:#000;
+		cursor:pointer;
+		margin-left:-3px;
+	}
+	.box {
+		float:left;
+		position:relative;
+		left:0;
+		height:81.5%;
+		width:19%;
+		margin-left:0;
+		display:block;
+		transition:margin-left 2s;
+		z-index:100;
+		min-height:682px;
+	}
+	#maindiv {
+		width:100%;
+		height:78%;
+		background:#f8f8f8;
+		margin:0;
+		padding:0;
+		min-width:1770px;
+	}
+	body {
+		height:100%;
+		position:absolute;
+		width:100%;
+		overflow:auto;
+	}
+  </style>
+  <body>
+    <div style="width: 100%;height: 18.5%;background: #8cab6e;background-image: url('img/head_background.jpg');background-size: cover;background-repeat: no-repeat;background-position:center center;position: relative;min-width: 1770px;min-height: 154px;">
+    </div>
+    <aside class="box" id="test">
+        <div style="width: 320px;height: 100%;background: #f8f8f8;position: absolute;box-shadow: 2px 0px 22px 3px rgba(115,115,115,0.2)">
+          <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+            <!-- 化工厂查询 -->
+            <div class="panel panel-default">
+              <div style="width: 10px;height: 50px;background: #8BA96E;float: left;display: none;" id="ldcxdiv"></div>
+              <div class="panel-heading" role="tab" id="headingOne">
+                <div class="panel-title" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" style="height: 30px;" id="ldcxclick">
+                  <img src="img/query.png" style="margin-left: 20px;float: left;width:30px;height:30px">
+                  <a class="collapsed" style="margin-left: 20px;font-size:17px;font-weight:bold;color: #666666;margin-top: 20px;text-decoration:none">化工厂查询</a></div>
+              </div>
+              <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div class="panel-body" id="querydiv">
+                  <div class="input-group" style="margin-bottom: 10px;">
+                    <div class="col-lg-6 col-lg-offset-3">
+                      <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                        <div class="btn-group" role="group">
+                          <button type="button" class="btn btn-default" >
+                            <span  style="cursor: pointer;color: #333;font-weight: bold;">查询</span>
+                          </button>
+                        </div>
+                        <div class="btn-group" role="group">
+                          <button type="button" class="btn btn-default" >
+                            <span  style="cursor: pointer;color: #333;font-weight: bold;">清除</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <!-- 化工厂查询 -->
+
+            <!-- 危险距离区域 -->
+            <div class="panel panel-default" style="margin:0;padding: 0;">
+              <div style="width: 10px;height: 50px;background: #8BA96E;float: left;display: none;" id="lddjdiv"></div>
+              <div class="panel-heading" role="tab" id="headingThree">
+                <div class="panel-title" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour" style="height: 30px;" id="lddjclick">
+                  <img src="img/灯.png" style="margin-left: 20px;float: left;width:30px;height:30px">
+                  <a class="collapsed" style="margin-left: 20px;font-weight:bold;font-size:17px;color: #666666;margin-top: 20px;text-decoration:none">危险区域等级</a></div>
+              </div>
+              <div id="collapseFour" class="panel-collapse collapse " role="tabpanel" aria-labelledby="headingThree">
+                <div class="panel-body" style="padding: 0;margin:0;">
+                  <!-- 中间的下拉框 -->
+                  <div class="panel-group" id="accordion111" role="tablist" aria-multiselectable="true" style="margin:0;">
+                    <!-- 路灯查询 -->
+                    <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+                      <div class="panel-body" style="padding: 0;margin:0;">
+                        <!-- 中间的下拉框 -->
+                        <div class="panel-group" id="accordion111" role="tablist" aria-multiselectable="true" style="margin:0;">
+                      </div>
+                    </div>
+                    </div>
+                    <!-- 危险距离等级 -->
+
+                    <!-- 致死区域 -->
+                    <div class="panel panel-default" style="margin:0;">
+                      <div style="width: 10px;height: 50px;background: #8BA96E;float: left;display: none;" id="ldbxdiv"></div>
+                      <div class="panel-heading" role="tab" id="headingThreeten">
+                        <div class="panel-title" role="button" data-toggle="collapse" data-parent="#accordion111" href="#collapseFourten" aria-expanded="false" aria-controls="collapseFourten" style="height: 30px;" id="ldbxclick">
+                          <img src="img/streetquery.png" style="margin-left:43px;float: left;width:25px;height:25px">
+                          <button id="tty"  class="btn btn-default" style="font-weight: bold;margin-left: 18px;margin-right: 15px;width: 110px;height: 34px;">致死区域</button>
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+                    <!-- 致死区域 -->
+
+                    <!-- 重伤区域 -->
+                    <div class="panel panel-default" style="margin:0;">
+                      <div style="width: 10px;height: 50px;background: #8BA96E;float: left;display: none;" id="ldbxdiv"></div>
+                      <div class="panel-heading" role="tab" id="headingThreeten">
+                        <div class="panel-title" role="button" data-toggle="collapse" data-parent="#accordion111" href="#collapseFourten" aria-expanded="false" aria-controls="collapseFourten" style="height: 30px;" id="ldbxclick">
+                          <img src="img/streetquery.png" style="margin-left:43px;float: left;width:25px;height:25px">
+                          <button id="tty"  class="btn btn-default" style="font-weight: bold;margin-left: 18px;margin-right: 15px;width: 110px;height: 34px;">重伤区域</button>
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+                    <!-- 重伤区域 -->
+
+                    <!-- 轻伤区域 -->
+                    <div class="panel panel-default" style="margin:0;">
+                      <div style="width: 10px;height: 50px;background: #8BA96E;float: left;display: none;" id="ldbxdiv"></div>
+                      <div class="panel-heading" role="tab" id="headingThreeten">
+                        <div class="panel-title" role="button" data-toggle="collapse" data-parent="#accordion111" href="#collapseFourten" aria-expanded="false" aria-controls="collapseFourten" style="height: 30px;" id="ldbxclick">
+                          <img src="img/streetquery.png" style="margin-left:43px;float: left;width:25px;height:25px">
+                          <button id="tty"  class="btn btn-default" style="font-weight: bold;margin-left: 18px;margin-right: 15px;width: 110px;height: 34px;">轻伤区域</button>
+                        </div>
+                      </div>
+                      </div>
+                      <!-- 轻伤区域 -->
+
+                      <!-- 吸入反应区域 -->
+                      <div class="panel panel-default" style="margin:0;">
+                        <div style="width: 10px;height: 50px;background: #8BA96E;float: left;display: none;" id="ldbxdiv"></div>
+                        <div class="panel-heading" role="tab" id="headingThreeten">
+                          <div class="panel-title" role="button" data-toggle="collapse" data-parent="#accordion111" href="#collapseFourten" aria-expanded="false" aria-controls="collapseFourten" style="height: 30px;" id="ldbxclick">
+                            <img src="img/streetquery.png" style="margin-left:43px;float: left;width:25px;height:25px">
+                            <button id="tty"  class="btn btn-default" style="font-weight: bold;margin-left: 18px;margin-right: 15px;width: 110px;height: 34px;">吸入反应区域</button>
+                          </div>
+                        </div>
+                        </div>
+
+                    </div>
+                    <!-- 吸入反应区域 -->
+
+            <!-- 救援路线规划 -->
+            <div class="panel panel-default" style="margin:0;padding: 0;">
+              <div style="width: 10px;height: 50px;background: #8BA96E;float: left;display: none;" id="xyljdiv"></div>
+              <div class="panel-heading" role="tab" id="headingThreethree">
+                <div class="panel-title" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFourthree" aria-expanded="false" aria-controls="collapseFourthree" style="height: 30px;" id="xyljclick">
+                  <img src="img/path.png" style="margin-left: 20px;float: left;width:30px;height:30px">
+                  <a class="collapsed" style="margin-left: 20px;font-weight:bold;font-size:17px;color: #666666;margin-top: 20px;text-decoration:none">救援路线规划</a></div>
+              </div>
+              <div id="collapseFourthree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThreethree">
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-lg-2">
+                      <span class="glyphicon glyphicon-sort" style="position: absolute;margin-top: 30px;margin-left:10px;font-size: 20px;"></span>
+                    </div>
+                    <div class="col-lg-9">
+                      <div class="input-group">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-map-marker" style="color: green"></span>
+                        </span>
+                        <div class="dropdown">
+                          <input type="text" class="form-control dropdown-toggle" id="dropdownMenu1" value="" oninput="gaibian()" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-9">
+                      <div class="input-group">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-map-marker" style="color: red"></span>
+                        </span>
+                        <div class="dropdown">
+                          <input type="text" class="form-control dropdown-toggle" id="dropdownMenu2" value="" oninput="gaibian2()" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-lg-6 col-lg-offset-3">
+                      <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                        <div class="btn-group" role="group">
+                          <button type="button" class="btn btn-default" style="font-weight: bold;" data-toggle="tooltip" data-placement="top" title="清除结果">
+                            <span class="glyphicon glyphicon-erase" style="font-size: 22px;"></span>
+                          </button>
+                        </div>
+                        <div class="btn-group" role="group">
+                          <button type="button" class="btn btn-default" style="font-weight: bold;" data-toggle="tooltip" data-placement="top" title="获取路线">
+                            <span class="glyphicon glyphicon-send" style="font-size: 22px;"></span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 救援路线规划 --></div>
+        </div>
+        <button id="btn" style="background-image:url('img/按钮-花.png') ;background-repeat: no-repeat; background-position:center;border-style: none;outline:none;width: 75px;height: 160px;z-index: 20000;position:relative;margin-left: -32px;"></button>
+      </aside>
+      <!-- 右边的按钮组 -->
+      <div id="maindiv">
+        <div style="width: 100px;height: 118px;position: fixed;margin-left: 93.97083333%;margin-top: 30px;z-index: 200000">
+          <div class="btn-group-vertical" role="group" id="anniu" style="box-shadow:2px 3px 5px 0px rgba(51,51,51,0.18);border-radius:5px;width: 45px;margin-left: 55px;">
+            <button type="button" class="btn btn-default" style="background-image:url('img/全图.png') ;background-repeat: no-repeat; background-position:center;border-style: none;outline:none;" onclick="Fullwidth()" data-toggle="tooltip" data-placement="left" title="全幅显示"></button>
+            <button type="button" class="btn btn-default" style="background-image:url('img/放大.png') ;background-repeat: no-repeat; background-position:center;border-style: none;outline:none;" onclick="enlarge()" data-toggle="tooltip" data-placement="left" title="放大"></button>
+            <button type="button" class="btn btn-default" style="background-image:url('img/缩小.png') ;background-repeat: no-repeat; background-position:center;border-style: none;outline:none;" onclick="narrow()" data-toggle="tooltip" data-placement="left" title="缩小"></button>
+            <button type="button" class="btn btn-default" style="background-image:url('img/平移.png') ;background-repeat: no-repeat; background-position:center;border-style: none;outline:none;" onclick="translation()" data-toggle="tooltip" data-placement="left" title="平移"></button>
+          </div>
+        </div>
+        <!-- 地图 -->
+        <div style="background: #f8f8f8;width: 100%;height: 100%;position:sticky;top: 0px;min-height: 664px;" id="#">
+        </div>
+        <!-- 地图 -->
+      </div>
+      <!-- 右边的按钮组 -->
+      <!-- 底部 -->
+      <div style="background: #f8f8f8;width:100%;height: 3.5%;min-width: 1770px;">
+        <span style="padding-top: 10px;display: block;text-align: center;">Copyright &copy; 2012-2020 SuperMap</span></div>
+      <!-- 底部 --></body>
+  <script src="js/Facility_Query.js"></script>
+</html>
