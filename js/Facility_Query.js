@@ -38,7 +38,7 @@ $('#btn').click(function() {
         },
         250);
         $('#map').animate({
-            // 'margin-left': '50px'
+            'margin-left': '50px'
         },
         350);
         n = n + 1;
