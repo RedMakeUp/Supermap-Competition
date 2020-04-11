@@ -17,12 +17,20 @@ $('#hospital-clean').click(() => {
 // --------------------------------------------------------------
 // "毒气扩散区分析-致死区域"按钮点击
 $('#area-die').click(() => {
-  console.log('致死区域');
-  // ...
+  if(areaShow.die === false){
+    areaShow.die = true;
+
+    addAreaToMap(areaDie);
+  }else{
+    console.log("致死区域");
+  }
 });
 // "毒气扩散区分析-重伤区域"按钮点击
 $('#area-severe').click(() => {
-  console.log('重伤区域');
+  if(areaShow.die === true){
+    removeAreaFromMap(areaDie);
+    areaShow.die = false;
+  }
   // ...
 });
 // "毒气扩散区分析-轻伤区域"按钮点击
