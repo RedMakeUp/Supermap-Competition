@@ -9,8 +9,8 @@ map = L.map('map', {
   preferCanvas: true,
   crs: L.CRS.EPSG3857,
   center: [30.628228073321804, 103.70288014411928],// Currently for facility, but [30.6107, 103.6992] for map center
-  maxZoom: 17,
-  minZoom: 17,
+  maxZoom: 15,
+  minZoom: 15,
   zoom: 14,
   zoomControl: false
 });
@@ -33,7 +33,7 @@ L.supermap.tiledMapLayer(url).addTo(map);
 // Note:
 //  目前是静态的，后期可以通过‘divIcon’+‘CSS’(@areaDie_text)或者直接requestAnimationFrame()让其动起来
 // --------------------------------------------------------------
-function generateArea(centerPos, mainColor, angle, lineLen, areaRadius, dotRadius, textClassName){
+function generateArea(centerPos, mainColor, angle, lineLen, areaRadius, dotRadius, textClassName,text){
   // 圆形区域
   let circleStyle = {
     radius: areaRadius, // In meters
@@ -64,14 +64,15 @@ function generateArea(centerPos, mainColor, angle, lineLen, areaRadius, dotRadiu
   };
   let area_dot = L.circle(coords, dotStyle);
   // 文字
-  var myTextIcon = L.divIcon({className: textClassName,html: "<div class='area-die-text'>150m</div>"});
+  var myTextIcon = L.divIcon({className: textClassName,html: "<div class=" + textClassName + ">" + text +"</div>"});
   let area_text = L.marker(centerPos, {icon: myTextIcon});
   // 封装在一起，便于操作
   return {
     circle: area_circle,
     line: area_line,
     dot: area_dot,
-    text: area_text
+    text: area_text,
+    show: false,
   };
 }
 // --------------------------------------------------------------
@@ -80,12 +81,14 @@ function generateArea(centerPos, mainColor, angle, lineLen, areaRadius, dotRadiu
 // 添加或者删除某个扩散区域到地图
 // --------------------------------------------------------------
 function addAreaToMap(area){
+  area.show = true;
   area.circle.addTo(map);
   area.line.addTo(map);
   area.dot.addTo(map);
   area.text.addTo(map);
 }
 function removeAreaFromMap(area){
+  area.show = false;
   area.circle.remove(map);
   area.line.remove(map);
   area.dot.remove(map);
@@ -93,15 +96,50 @@ function removeAreaFromMap(area){
 }
 // --------------------------------------------------------------
 
+function resetAllArea(){
+  if(areaDie.show) removeAreaFromMap(areaDie);
+  if(areaSevere.show) removeAreaFromMap(areaSevere);
+  if(areaMinor.show) removeAreaFromMap(areaMinor);
+  if(areaInhalation.show) removeAreaFromMap(areaInhalation);
+}
+
 var areaDie = generateArea(
   [30.628228073321804, 103.70288014411928],
   '#f00',
   -45.0,
   160,
   150,
-  10,
+  25,
   'area-die-text',
+  '150m'
 );
-var areaShow = {
-  die: false,
-};
+var areaSevere = generateArea(
+  [30.628228073321804, 103.70288014411928],
+  '#0f0',
+  -45.0,
+  420,
+  400,
+  30,
+  'area-severe-text',
+  '400m'
+);
+var areaMinor = generateArea(
+  [30.628228073321804, 103.70288014411928],
+  '#00f',
+  -45.0,
+  840,
+  800,
+  40,
+  'area-minor-text',
+  '800m'
+);
+var areaInhalation = generateArea(
+  [30.628228073321804, 103.70288014411928],
+  '#0ff',
+  -45.0,
+  1570,
+  1500,
+  50,
+  'area-inhalation-text',
+  '1500m'
+);

@@ -17,31 +17,23 @@ $('#hospital-clean').click(() => {
 // --------------------------------------------------------------
 // "毒气扩散区分析-致死区域"按钮点击
 $('#area-die').click(() => {
-  if(areaShow.die === false){
-    areaShow.die = true;
-
-    addAreaToMap(areaDie);
-  }else{
-    console.log("致死区域");
-  }
+  resetAllArea();
+  addAreaToMap(areaDie);
 });
 // "毒气扩散区分析-重伤区域"按钮点击
 $('#area-severe').click(() => {
-  if(areaShow.die === true){
-    removeAreaFromMap(areaDie);
-    areaShow.die = false;
-  }
-  // ...
+  resetAllArea();
+  addAreaToMap(areaSevere);
 });
 // "毒气扩散区分析-轻伤区域"按钮点击
 $('#area-minor').click(() => {
-  console.log('轻伤区域');
-  // ...
+  resetAllArea();
+  addAreaToMap(areaMinor);
 });
 // "毒气扩散区分析-吸入反应区域"按钮点击
 $('#area-inhalation').click(() => {
-  console.log('吸入反应区域');
-  // ...
+  resetAllArea();
+  addAreaToMap(areaInhalation);
 });
 // --------------------------------------------------------------
 
