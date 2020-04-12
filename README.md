@@ -17,7 +17,7 @@ js/demo/leftControl.js  左侧面板控制，目前已添加多个“按钮点�
 
 Showcase
 # ----------------------------------------
-![致死区域](https://github.com/RedMakeUp/Supermap-Competition/blob/master/Showcase/%E6%AD%BB%E4%BA%A1%E5%8C%BA%E5%9F%9F.png)
-![重伤区域](https://github.com/RedMakeUp/Supermap-Competition/blob/master/Showcase/%E9%87%8D%E4%BC%A4%E5%8C%BA%E5%9F%9F.png)
-![轻伤区域](https://github.com/RedMakeUp/Supermap-Competition/blob/master/Showcase/%E8%BD%BB%E4%BC%A4%E5%8C%BA%E5%9F%9F.png)
-![吸入反应区域](https://github.com/RedMakeUp/Supermap-Competition/blob/master/Showcase/%E5%90%B8%E5%85%A5%E5%8F%8D%E5%BA%94%E5%8C%BA%E5%9F%9F.png)
+![致死区域](https://github.com/RedMakeUp/Supermap-Competition/blob/master/Showcase/AreaDie.png)
+![重伤区域](https://github.com/RedMakeUp/Supermap-Competition/blob/master/Showcase/AreaSevere.png)
+![轻伤区域](https://github.com/RedMakeUp/Supermap-Competition/blob/master/Showcase/AreaMinor.png)
+![吸入反应区域](https://github.com/RedMakeUp/Supermap-Competition/blob/master/Showcase/AreaInhalation.png)
