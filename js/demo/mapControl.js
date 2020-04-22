@@ -1,6 +1,11 @@
-var host = "http://60.205.181.110:8090";
-var url = host + "/iserver/services/map-city-2/rest/maps/City@CityData";
-var serverUrl = host + "/iserver/services/plot-jingyong/rest/plot/";
+var isUseDefaultService = true;
+var host = "https://iserver.supermap.io";
+var url = host + "/iserver/services/map-china400/rest/maps/China";
+if(!isUseDefaultService){
+  host = "http://60.205.181.110:8090";
+  url = host + "/iserver/services/map-city-2/rest/maps/City@CityData";
+}
+
 var map;
 
 // 添加化工厂地图
@@ -9,15 +14,104 @@ map = L.map('map', {
   preferCanvas: true,
   crs: L.CRS.EPSG3857,
   center: [30.628228073321804, 103.70288014411928],// Currently for facility, but [30.6107, 103.6992] for map center
-  maxZoom: 15,
-  minZoom: 15,
-  zoom: 14,
+  maxZoom: 16,
+  minZoom: 14,
+  zoom: 15,
   zoomControl: false
 });
-// map.on('click',(e) => {
-//   console.log(e);
-// });
+map.on('zoom', changeForZoom);
 L.supermap.tiledMapLayer(url).addTo(map);
+// --------------------------------------------------------------
+
+
+// 不同的Zoom等级，定义不同的行为
+// --------------------------------------------------------------
+function changeForZoom(){
+  var zoomLevel = map.getZoom();
+
+  var areaDieText = $('#area-die-text');
+  var areaSevereText = $('#area-severe-text');
+  var areaMinorText = $('#area-minor-text');
+  var areaInhalationText = $('#area-inhalation-text');
+
+  switch (zoomLevel) {
+      case 14:
+        changeForZoom_14(areaDieText, areaSevereText, areaMinorText, areaInhalationText);
+        break;
+      case 15:
+        changeForZoom_15(areaDieText, areaSevereText, areaMinorText, areaInhalationText);
+        break;
+      case 16:
+        changeForZoom_16(areaDieText, areaSevereText, areaMinorText, areaInhalationText);
+        break;
+  }
+}
+
+function changeForZoom_14(areaDieText, areaSevereText, areaMinorText, areaInhalationText){
+  if(areaDieText.length !== 0){
+    areaDieText.css('font-size', 5);
+    areaDieText.css('transform', 'rotate(30deg) translate(8px,-5px)');
+  }
+  
+  if(areaSevereText.length !== 0){
+    areaSevereText.css('font-size', 15);
+    areaSevereText.css('transform', 'rotate(30deg) translate(10px,-15px)');
+  }
+
+  if(areaMinorText.length !== 0){
+    areaMinorText.css('font-size', 25);
+    areaMinorText.css('transform', 'rotate(30deg) translate(15px,-25px)');
+  }
+
+  if(areaInhalationText.length !== 0){
+    areaInhalationText.css('font-size', 35);
+    areaInhalationText.css('transform', 'rotate(30deg) translate(35px,-35px)');
+  }
+}
+
+function changeForZoom_15(areaDieText, areaSevereText, areaMinorText, areaInhalationText){
+  if(areaDieText.length !== 0){
+    areaDieText.css('font-size', 10);
+    areaDieText.css('transform', 'rotate(30deg) translate(10px,-10px)');
+  }
+  
+  if(areaSevereText.length !== 0){
+    areaSevereText.css('font-size', 25);
+    areaSevereText.css('transform', 'rotate(30deg) translate(15px,-25px)');
+  }
+
+  if(areaMinorText.length !== 0){
+    areaMinorText.css('font-size', 35);
+    areaMinorText.css('transform', 'rotate(30deg) translate(55px,-35px)');
+  }
+
+  if(areaInhalationText.length !== 0){
+    areaInhalationText.css('font-size', 45);
+    areaInhalationText.css('transform', 'rotate(30deg) translate(115px,-45px)');
+  }
+}
+
+function changeForZoom_16(areaDieText, areaSevereText, areaMinorText, areaInhalationText){
+  if(areaDieText.length !== 0){
+    areaDieText.css('font-size', 20);
+    areaDieText.css('transform', 'rotate(30deg) translate(10px,-20px)');
+  }
+  
+  if(areaSevereText.length !== 0){
+    areaSevereText.css('font-size', 35);
+    areaSevereText.css('transform', 'rotate(30deg) translate(50px,-35px)');
+  }
+
+  if(areaMinorText.length !== 0){
+    areaMinorText.css('font-size', 45);
+    areaMinorText.css('transform', 'rotate(30deg) translate(135px,-45px)');
+  }
+
+  if(areaInhalationText.length !== 0){
+    areaInhalationText.css('font-size', 65);
+    areaInhalationText.css('transform', 'rotate(30deg) translate(225px,-65px)');
+  }
+}
 // --------------------------------------------------------------
 
 
@@ -25,7 +119,6 @@ L.supermap.tiledMapLayer(url).addTo(map);
 // @centerPos     中心位置，经纬度组成的数组，如[lat,lng]
 // @mainColor     主体颜色，字符串，如'#f00'
 // @angle         线段的倾斜角，角度制
-// @lineLen       线段长度，单位米
 // @areaRadius    圆形的半径，单位米
 // @dotRadius     小园点的半径，单位米
 // @textClassName 文字要使用的css类名
@@ -33,26 +126,22 @@ L.supermap.tiledMapLayer(url).addTo(map);
 // Note:
 //  目前是静态的，后期可以通过‘divIcon’+‘CSS’(@areaDie_text)或者直接requestAnimationFrame()让其动起来
 // --------------------------------------------------------------
-function generateArea(centerPos, mainColor, angle, lineLen, areaRadius, dotRadius, textClassName,text){
+function generateArea(centerPos, mainColor, angle, areaRadius, dotRadius, textClassName,text){
   // 圆形区域
   let circleStyle = {
     radius: areaRadius, // In meters
     fillColor: mainColor,
-    fillOpacity: 0.2,
+    fillOpacity: 0.45,
     color: mainColor,
-    opacity: 0.4
+    opacity: 0.5
   };
   let area_circle = L.circle(centerPos, circleStyle);
   // 线段
-  let theta = angle / 180.0 * Math.PI;
   let lineStyle = {
     color: mainColor,
     opacity: 0.6
   };
-  let x = lineLen * Math.cos(theta);
-  let y = lineLen * Math.sin(theta);
-  let xy_unproj = L.CRS.EPSG3857.unproject(L.point(x, y));
-  let coords = [centerPos[0] + xy_unproj.lat, centerPos[1] + xy_unproj.lng];
+  let coords = L.GeometryUtil.destination(L.latLng(centerPos), angle, areaRadius);
   let area_line = L.polyline([centerPos, coords], lineStyle);
   // 线段一端的点
   let dotStyle = {
@@ -64,7 +153,10 @@ function generateArea(centerPos, mainColor, angle, lineLen, areaRadius, dotRadiu
   };
   let area_dot = L.circle(coords, dotStyle);
   // 文字
-  var myTextIcon = L.divIcon({className: textClassName,html: "<div class=" + textClassName + ">" + text +"</div>"});
+  var myTextIcon = L.divIcon({
+    className: "my-div-icon",
+    html: "<div class=area-text " + "id=\"" +textClassName + "\">" + text +"</div>"
+  });
   let area_text = L.marker(centerPos, {icon: myTextIcon});
   // 封装在一起，便于操作
   return {
@@ -86,6 +178,8 @@ function addAreaToMap(area){
   area.line.addTo(map);
   area.dot.addTo(map);
   area.text.addTo(map);
+
+  changeForZoom();
 }
 function removeAreaFromMap(area){
   area.show = false;
@@ -106,18 +200,16 @@ function resetAllArea(){
 var areaDie = generateArea(
   [30.628228073321804, 103.70288014411928],
   '#f00',
-  -45.0,
-  160,
+  120.0,
   150,
-  25,
+  20,
   'area-die-text',
   '150m'
 );
 var areaSevere = generateArea(
   [30.628228073321804, 103.70288014411928],
-  '#0f0',
-  -45.0,
-  420,
+  '#FF9933',
+  120.0,
   400,
   30,
   'area-severe-text',
@@ -126,8 +218,7 @@ var areaSevere = generateArea(
 var areaMinor = generateArea(
   [30.628228073321804, 103.70288014411928],
   '#00f',
-  -45.0,
-  840,
+  120.0,
   800,
   40,
   'area-minor-text',
@@ -135,9 +226,8 @@ var areaMinor = generateArea(
 );
 var areaInhalation = generateArea(
   [30.628228073321804, 103.70288014411928],
-  '#0ff',
-  -45.0,
-  1570,
+  '#0f0',
+  120.0,
   1500,
   50,
   'area-inhalation-text',

@@ -61,40 +61,36 @@
     overflow: auto;
   }
 
-  .area-die-text {
-    /* position: absolute; */
-    width:max-content;
-    height:max-content;
-    font-size:30px;
-    transform: rotate(45deg) translate(20px,-10px);
-    color: rgba(255, 0, 0, 0.8);
+  .my-div-icon{
+    background: inherit;
+    border: inherit;
   }
 
-  .area-severe-text {
-    /* position: absolute; */
+  .area-text{
     width:max-content;
     height:max-content;
-    font-size:30px;
-    transform: rotate(45deg) translate(20px,-10px);
-    color: rgba(0, 255, 0, 0.8);
+    transform-origin: center left;
+    color: rgba(255, 255, 255, 0.8);
   }
 
-  .area-minor-text {
-    /* position: absolute; */
-    width:max-content;
-    height:max-content;
-    font-size:30px;
-    transform: rotate(45deg) translate(20px,-10px);
-    color: rgba(0, 0, 255, 0.8);
+  #area-die-text {
+    font-size: 10px;
+    transform: rotate(30deg) translate(10px,-10px);
+  }
+
+  #area-severe-text {
+    font-size: 25px;
+    transform: rotate(30deg) translate(15px,-30px);
+  }
+
+  #area-minor-text {
+    font-size: 35px;
+    transform: rotate(30deg) translate(55px,-35px);
   }
   
-  .area-inhalation-text {
-    /* position: absolute; */
-    width:max-content;
-    height:max-content;
-    font-size:30px;
-    transform: rotate(45deg) translate(20px,-10px);
-    color: rgba(0, 255, 255, 0.8);
+  #area-inhalation-text {
+    font-size: 45px;
+    transform: rotate(30deg) translate(115px,-45px);
   }
 </style>
 
@@ -293,6 +289,7 @@
 </body>
 <script src="js/Facility_Query.js"></script>
 <script src='js/demo/L.Polyline.SnakeAnim.js'></script>
+<script src="https://npmcdn.com/leaflet-geometryutil"></script>
 <script src="js/demo/mapControl.js"></script>
 <script src="js/demo/leftControl.js"></script>
 </html>
