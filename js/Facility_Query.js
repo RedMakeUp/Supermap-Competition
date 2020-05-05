@@ -22,7 +22,7 @@ $(function() {
 });
 
 // 控制左边菜单栏滑入滑出
-$('#btn').click(function() {
+$('.button-left-control').click(function() {
     if (n == 1) {
         $('#test').animate({
             'margin-left': '0px'

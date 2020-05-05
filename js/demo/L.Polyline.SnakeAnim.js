@@ -1,4 +1,7 @@
-
+// ------------------------------------------------------------------
+// https://github.com/IvanSanchez/Leaflet.Polyline.SnakeAnim
+// Author: ivan@sanchezortega.es
+// ------------------------------------------------------------------
 
 
 

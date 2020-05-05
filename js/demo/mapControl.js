@@ -1,26 +1,156 @@
-var isUseDefaultService = true;
+// 连接到服务器
+// --------------------------------------------------------------
+var isUseDefaultService = false;
 var host = "https://iserver.supermap.io";
-var url = host + "/iserver/services/map-china400/rest/maps/China";
+var mapUrl = host + "/iserver/services/map-china400/rest/maps/China";
+var roadNetUrl = null;
 if(!isUseDefaultService){
   host = "http://60.205.181.110:8090";
-  url = host + "/iserver/services/map-city-2/rest/maps/City@CityData";
+  mapUrl = host + "/iserver/services/map-City/rest/maps/City%40EmergDS";
+  roadNetUrl = host + "/iserver/services/transportationAnalyst-City/rest/networkanalyst/EmergDS_Network@EmergDS";
+}
+// --------------------------------------------------------------
+
+
+// 工厂和医院的坐标
+// --------------------------------------------------------------
+class BuildingInfo{
+  constructor(lat, lng, name, desc){
+    this.name = name;
+    this.desc = desc;
+    this.lat = lat;
+    this.lng = lng;
+    this.marker = L.marker([lat, lng]);
+    this.marker.bindPopup(desc);
+  }
+
+  get latLngPos(){
+    return L.latLng(this.lat, this.lng);
+  }
+
+  get lngLatPos(){
+    return L.latLng(this.lng, this.lat);
+  }
+
+  get latLngArray(){
+    return [this.lat, this.lng];
+  }
 }
 
-var map;
+var chemicalWork = new BuildingInfo(3584569.32263774, 11544353.69838877, "chemicalWork", "化工厂<br><br>平面坐标<br>X:11544353.698<br>Y:3584569.323");
+var hospitals = [
+  new BuildingInfo(3585320.698, 11542483.019, "市骨科康复医院", "市骨科康复医院<br><br>平面坐标<br>X:11542483.019<br>Y:3585320.698"),
+  new BuildingInfo(3583072.010, 11545579.047, "市中医院", "市中医院<br><br>平面坐标<br>X:11545579.047<br>Y:3583072.010"),
+  new BuildingInfo(3580523.653, 11545235.573, "某军区总医院", "某军区总医院<br><br>平面坐标<br>X:11545235.573<br>Y:3580523.653"),
+  new BuildingInfo(3582031.027, 11543943.779, "仁爱医院", "仁爱医院<br><br>平面坐标<br>X:11543943.779<br>Y:3582031.027"),
+  new BuildingInfo(3582697.889, 11542678.481, "市第一人民医院", "市第一人民医院<br><br>平面坐标<br>X:11542678.481<br>Y:3582697.889"),
+  new BuildingInfo(3582627.885, 11541378.165, "城南医院", "城南医院<br><br>平面坐标<br>X:11541378.165<br>Y:3582627.885")
+];
+
+function removeHospitals(){
+  hospitals.forEach((hospital) => {
+    if(map.hasLayer(hospital.marker)){
+      hospital.marker.removeFrom(map);
+    }
+  });
+}
+
+function addHospitals(){
+  hospitals.forEach((hospital) => {
+    if(!map.hasLayer(hospital.marker)){
+      hospital.marker.addTo(map);
+    }
+  });
+}
+// --------------------------------------------------------------
+
 
 // 添加化工厂地图
 // --------------------------------------------------------------
-map = L.map('map', {
+var map = L.map('map', {
   preferCanvas: true,
-  crs: L.CRS.EPSG3857,
-  center: [30.628228073321804, 103.70288014411928],// Currently for facility, but [30.6107, 103.6992] for map center
-  maxZoom: 16,
-  minZoom: 14,
-  zoom: 15,
+  crs: L.CRS.NonEarthCRS({
+    bounds: L.bounds([11541226.6 , 3579087.71], [ 11546271.45 , 3585516.41]),
+    origin: L.point(11541226.6 , 3585516.41)
+  }),
+  center: [3582040.311171875, 11545173.9314453],
+  // maxZoom: 16,
+  // minZoom: 14,
+  zoom: 1,
   zoomControl: false
 });
 map.on('zoom', changeForZoom);
-L.supermap.tiledMapLayer(url).addTo(map);
+map.on('click', (e)=>{
+  console.log(e.latlng);
+});
+map.dragging.disable();
+map.scrollWheelZoom.disable();
+map.doubleClickZoom.disable();
+map.boxZoom.disable();
+map.keyboard.disable();
+L.supermap.tiledMapLayer(mapUrl).addTo(map);
+// --------------------------------------------------------------
+
+$('[data-toggle="tooltip"]').tooltip({
+  trigger : 'hover'
+})  
+
+// 标记化工厂
+// --------------------------------------------------------------
+// chemicalWork.marker.addTo(map);
+// --------------------------------------------------------------
+
+// 最近设施分析
+// --------------------------------------------------------------
+// 创建最近设施分析服务实例
+let findClosetFacilitiesService = L.supermap.networkAnalystService(roadNetUrl);
+// 创建最近设施分析参数实例
+let resultSetting = new SuperMap.TransportationAnalystResultSetting({
+  returnEdgeFeatures: true,
+  returnEdgeGeometry: true,
+  returnEdgeIDs: true,
+  returnNodeFeatures: true,
+  returnNodeGeometry: true,
+  returnNodeIDs: true,
+  returnPathGuides: true,
+  returnRoutes: true
+});
+let analystParameter = new SuperMap.TransportationAnalystParameter({
+  resultSetting: resultSetting,
+  weightFieldName: "SmLength"
+});
+let findClosetFacilitiesParameter = new SuperMap.FindClosestFacilitiesParameters({
+  event: chemicalWork.latLngPos,
+  expectFacilityCount: 1,
+  facilities: function(){ 
+    let result = []; 
+    hospitals.forEach((hospital)=>{
+      result.push(hospital.latLngPos);
+    });
+    return result;
+  }(),
+  isAnalyzeById: false,
+  parameter: analystParameter
+});
+//进行查找
+findClosetFacilitiesService.findClosestFacilities(findClosetFacilitiesParameter, function (serviceResult) {
+  let result = serviceResult.result;
+  // rersult.facilityPathList.map(function (result) {
+  //     L.geoJSON(result.route).addTo(map);
+  // });
+
+  let routeCoords = [];
+  result.facilityPathList.map((path) => {
+    path.route.geometry.coordinates[0].forEach((coord) => {
+      routeCoords.push([coord[1], coord[0]]);
+      // console.log(coord);
+    });
+    // routeCoords.push(path.route.geometry.coordinates);
+  });
+  console.log(routeCoords);
+  let line = L.polyline(routeCoords.reverse(), {snakingSpeed: 200});
+  line.addTo(map).snakeIn();
+});
 // --------------------------------------------------------------
 
 
@@ -141,7 +271,11 @@ function generateArea(centerPos, mainColor, angle, areaRadius, dotRadius, textCl
     color: mainColor,
     opacity: 0.6
   };
-  let coords = L.GeometryUtil.destination(L.latLng(centerPos), angle, areaRadius);
+  let theta = angle / 180.0 * Math.PI;
+  let endX = centerPos[0] + areaRadius * Math.cos(theta);
+  let endY = centerPos[1] + areaRadius * Math.sin(theta);
+  // let coords = L.GeometryUtil.destination(L.latLng(centerPos), angle, areaRadius);
+  let coords = [endX, endY];
   let area_line = L.polyline([centerPos, coords], lineStyle);
   // 线段一端的点
   let dotStyle = {
@@ -198,7 +332,7 @@ function resetAllArea(){
 }
 
 var areaDie = generateArea(
-  [30.628228073321804, 103.70288014411928],
+  chemicalWork.latLngArray,
   '#f00',
   120.0,
   150,
@@ -207,7 +341,7 @@ var areaDie = generateArea(
   '150m'
 );
 var areaSevere = generateArea(
-  [30.628228073321804, 103.70288014411928],
+  chemicalWork.latLngArray,
   '#FF9933',
   120.0,
   400,
@@ -216,7 +350,7 @@ var areaSevere = generateArea(
   '400m'
 );
 var areaMinor = generateArea(
-  [30.628228073321804, 103.70288014411928],
+  chemicalWork.latLngArray,
   '#00f',
   120.0,
   800,
@@ -225,7 +359,7 @@ var areaMinor = generateArea(
   '800m'
 );
 var areaInhalation = generateArea(
-  [30.628228073321804, 103.70288014411928],
+  chemicalWork.latLngArray,
   '#0f0',
   120.0,
   1500,
