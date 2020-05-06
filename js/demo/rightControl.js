@@ -1,15 +1,19 @@
-function Fullwidth(){
-    console.log("全幅显示");
-}
+$("#button-fullWidth").click(() => {
+    resetMap();
+});
 
-function enlarge(){
+$("#button-zoomIn").click(() => {
     map.setZoom(map.getZoom() + 1);
-}
+});
 
-function narrow(){
+$("#button-zoomOut").click(() => {
     map.setZoom(map.getZoom() - 1);
-} 
+});
 
-function translation(){
-    console.log("平移");
-}
+$("#button-pan").click(() => {
+    // if(map.dragging.enabled()){
+    //     map.dragging.disable();
+    // }else{
+    //     map.dragging.enable();
+    // }
+});

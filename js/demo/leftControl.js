@@ -65,6 +65,7 @@ $(".dropdown-menu").on('click', 'li a', function(){
 $('#result-clean').click(() => {
   $("#hospital-select-control").text("请选择一家医院");
   $("#hospital-select-control").val("请选择一家医院");
+  removeCurrentRoute();
 });
 
 // “最短救援路线-获取路线”按钮点击
@@ -76,7 +77,7 @@ $('#retrive-route').click(() => {
   for(let i = 0; i < hospitals.length; i++){
     let hospital = hospitals[i];
     if(srcHospitalName === hospital.name){
-      console.log(hospital.latLngPos);
+      findCloestRoute(hospital.latLngPos);
 
       return;
     }

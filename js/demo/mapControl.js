@@ -67,33 +67,35 @@ function addHospitals(){
 
 // 添加化工厂地图
 // --------------------------------------------------------------
+var mapOriginCenter = [(3579087.71 + 3585516.41) / 2, (11541226.6 + 11546271.45) / 2];
 var map = L.map('map', {
   preferCanvas: true,
   crs: L.CRS.NonEarthCRS({
     bounds: L.bounds([11541226.6 , 3579087.71], [ 11546271.45 , 3585516.41]),
     origin: L.point(11541226.6 , 3585516.41)
   }),
-  center: [3582040.311171875, 11545173.9314453],
-  // maxZoom: 16,
-  // minZoom: 14,
+  center: mapOriginCenter,
+  maxZoom: 4,
+  minZoom: 1,
   zoom: 1,
   zoomControl: false
 });
 map.on('zoom', changeForZoom);
-map.on('click', (e)=>{
-  console.log(e.latlng);
-});
-map.dragging.disable();
+
+// map.dragging.disable();
 map.scrollWheelZoom.disable();
 map.doubleClickZoom.disable();
 map.boxZoom.disable();
 map.keyboard.disable();
 L.supermap.tiledMapLayer(mapUrl).addTo(map);
-// --------------------------------------------------------------
 
-$('[data-toggle="tooltip"]').tooltip({
-  trigger : 'hover'
-})  
+function resetMap(){
+  removeCurrentRoute();
+  removeHospitals();
+  resetAllArea();
+  map.setView(mapOriginCenter, 1);
+}
+// --------------------------------------------------------------
 
 // 标记化工厂
 // --------------------------------------------------------------
@@ -103,9 +105,9 @@ $('[data-toggle="tooltip"]').tooltip({
 // 最近设施分析
 // --------------------------------------------------------------
 // 创建最近设施分析服务实例
-let findClosetFacilitiesService = L.supermap.networkAnalystService(roadNetUrl);
+var findClosetFacilitiesService = L.supermap.networkAnalystService(roadNetUrl);
 // 创建最近设施分析参数实例
-let resultSetting = new SuperMap.TransportationAnalystResultSetting({
+var resultSetting = new SuperMap.TransportationAnalystResultSetting({
   returnEdgeFeatures: true,
   returnEdgeGeometry: true,
   returnEdgeIDs: true,
@@ -115,42 +117,49 @@ let resultSetting = new SuperMap.TransportationAnalystResultSetting({
   returnPathGuides: true,
   returnRoutes: true
 });
-let analystParameter = new SuperMap.TransportationAnalystParameter({
+var analystParameter = new SuperMap.TransportationAnalystParameter({
   resultSetting: resultSetting,
   weightFieldName: "SmLength"
 });
-let findClosetFacilitiesParameter = new SuperMap.FindClosestFacilitiesParameters({
-  event: chemicalWork.latLngPos,
-  expectFacilityCount: 1,
-  facilities: function(){ 
-    let result = []; 
-    hospitals.forEach((hospital)=>{
-      result.push(hospital.latLngPos);
-    });
-    return result;
-  }(),
-  isAnalyzeById: false,
-  parameter: analystParameter
-});
-//进行查找
-findClosetFacilitiesService.findClosestFacilities(findClosetFacilitiesParameter, function (serviceResult) {
-  let result = serviceResult.result;
-  // rersult.facilityPathList.map(function (result) {
-  //     L.geoJSON(result.route).addTo(map);
-  // });
+// 当前显示的路径
+var currentRoute = null;
 
-  let routeCoords = [];
-  result.facilityPathList.map((path) => {
-    path.route.geometry.coordinates[0].forEach((coord) => {
-      routeCoords.push([coord[1], coord[0]]);
-      // console.log(coord);
-    });
-    // routeCoords.push(path.route.geometry.coordinates);
+// 给定一家医院的位置，动态显示其到工厂的最短路径
+function findCloestRoute(hospitalPos){
+  let findClosetFacilitiesParameter = new SuperMap.FindClosestFacilitiesParameters({
+    event: chemicalWork.latLngPos,
+    expectFacilityCount: 1,
+    facilities: [hospitalPos],
+    isAnalyzeById: false,
+    parameter: analystParameter
   });
-  console.log(routeCoords);
-  let line = L.polyline(routeCoords.reverse(), {snakingSpeed: 200});
-  line.addTo(map).snakeIn();
-});
+  //进行查找
+  findClosetFacilitiesService.findClosestFacilities(findClosetFacilitiesParameter, function (serviceResult) {
+    let result = serviceResult.result;
+  
+    // 解析服务器返回结果
+    let routeCoords = [];
+    result.facilityPathList.map((path) => {
+      path.route.geometry.coordinates[0].forEach((coord) => {
+        routeCoords.push([coord[1], coord[0]]);
+      });
+    });
+
+    // 清除当前显示的路径
+    removeCurrentRoute();
+    // 添加新的路径
+    currentRoute = L.polyline(routeCoords, {snakingSpeed: 200});
+    currentRoute.addTo(map).snakeIn();
+  });
+}
+
+// 清除当前地图的路径
+function removeCurrentRoute(){
+  if(currentRoute !== null){
+    currentRoute.removeFrom(map);
+    currentRoute = null;
+  }
+}
 // --------------------------------------------------------------
 
 
