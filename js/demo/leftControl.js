@@ -19,24 +19,28 @@ $('#radio-die').change(() => {
   console.log("die");
   resetAllArea();
   addAreaToMap(areaDie);
+  map.panTo(chemicalWork.latLngPos);
 });
 // "毒气扩散区分析-重伤区域"按钮点击
 $('#radio-severe').change(() => {
   console.log("severe");
-  // resetAllArea();
-  // addAreaToMap(areaSevere);
+  resetAllArea();
+  addAreaToMap(areaSevere);
+  map.panTo(chemicalWork.latLngPos);
 });
 // "毒气扩散区分析-轻伤区域"按钮点击
 $('#radio-minor').change(() => {
   console.log("minor");
-  // resetAllArea();
-  // addAreaToMap(areaMinor);
+  resetAllArea();
+  addAreaToMap(areaMinor);
+  map.panTo(chemicalWork.latLngPos);
 });
 // "毒气扩散区分析-吸入反应区域"按钮点击
 $('#radio-inhalation').change(() => {
   console.log("inhalation");
-  // resetAllArea();
-  // addAreaToMap(areaInhalation);
+  resetAllArea();
+  addAreaToMap(areaInhalation);
+  map.panTo(chemicalWork.latLngPos);
 });
 // "毒气扩散区分析-取消"按钮点击
 $('#radio-cancel').change(() => {

@@ -13,6 +13,8 @@
 
    /* 地图面板在主要内容区域的高度占比 */
    --map-panel-height-percent: 96.5%;
+
+   --hospital-marker-color: rgba(222, 125, 44, 0.99);
  }
 
  * {
@@ -59,29 +61,30 @@
  }
 
  .button-left-control-pane {
-  position:relative;
-  left: 320px;
-  width: 70px;
-  height: 100%;
-  border: none;
-  background-color: ;
-  background-image:url('../img/按钮-花.png');
-  background-repeat: no-repeat; 
-  background-position-y:center;
-  background-position-x: left;
-  outline:none;
-  z-index: 20000;
-}
+   position: relative;
+   left: 320px;
+   width: 70px;
+   height: 100%;
+   border: none;
+   /* background-color: ; */
+   background-image: url('../img/按钮-花.png');
+   background-repeat: no-repeat;
+   background-position-y: center;
+   background-position-x: left;
+   outline: none;
+   z-index: 20000;
+ }
 
-.button-left-control{
-  position:relative;
-  height: 160px;
-  width: 100%;
-  top: 50%;transform: translateY(-50%);
-  cursor: pointer;
-  border: none;
-  opacity: 0.0;
-}
+ .button-left-control {
+   position: relative;
+   height: 160px;
+   width: 100%;
+   top: 50%;
+   transform: translateY(-50%);
+   cursor: pointer;
+   border: none;
+   opacity: 0.0;
+ }
 
  .core-div {
    position: relative;
@@ -212,3 +215,66 @@
    animation-iteration-count: 1;
    animation-timing-function: linear;
  }
+
+ .css-icon {}
+
+ .circle-blob {
+   width: 10px;
+   height: 10px;
+   border-radius: 50%;
+   /* background-color: blueviolet; */
+   position: relative;
+   /* top: 50%;
+   left: 50%;
+   transform: translateY(-50%) translateX(-50%) scale(1); */
+   /* opacity: 0.8; */
+   background: var(--hospital-marker-color);
+   box-shadow: 0 0 0 0 var(--hospital-marker-color);
+   animation: pulse-purple 2s infinite;
+ }
+
+ @keyframes pulse-purple {
+   0% {
+     transform: scale(0.9);
+     box-shadow: 0 0 0 0 rgba(233, 59, 5, 0.7);
+   }
+
+   70% {
+     transform: scale(1);
+     box-shadow: 0 0 0 30px rgba(233, 59, 5, 0);
+   }
+
+   100% {
+     transform: scale(0.9);
+     box-shadow: 0 0 0 0 rgba(233, 59, 5, 0);
+   }
+ }
+
+ .area {
+   position: absolute;
+   border-radius: 50%;
+   border: none;
+   background: transparent;
+ }
+
+ #area-1 {}
+
+ #area-2 {}
+
+ #area-3 {}
+
+ #area-4 {}
+
+ .sweep{
+  position: absolute;
+  box-sizing: border-box;
+  /* top: -50%; left: -50%; */
+  border-right: solid 1px hsla(145, 50%, 40%, .3);
+  width: 108px; height: 108px;
+  border-radius: 100% 0 0 0;
+  transform-origin: 100% 100%;
+  background: linear-gradient(50deg, rgba(34, 34, 34, 0) 56%, hsla(145, 50%, 40%, 1));
+  animation: sweep 5s infinite linear;
+ }
+
+ @keyframes sweep { to { transform: rotate(360deg); } }
