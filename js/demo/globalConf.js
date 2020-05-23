@@ -218,3 +218,4 @@ dangerousAreas.set("inhalation", new DangerousArea(chemicalWork.latLngArray, 'rg
 $('[data-toggle="tooltip"]').tooltip({
     trigger : 'hover'
 });
+$(".progress-line").hide();

@@ -73,6 +73,7 @@ $('#retrive-route').click(() => {
   let srcHospitalName = $('#hospital-select-control')[0].value;
 
   // 如果输入值正确，则获取路线
+  $(".progress-line").show();
   for(let i = 0; i < hospitals.length; i++){
     let hospital = hospitals[i];
     if(srcHospitalName === hospital.name){
@@ -87,5 +88,6 @@ $('#retrive-route').click(() => {
   $("#hospital-select-control").on('animationend', function(){    
     $("#hospital-select-control").removeClass('shadow-pulse');
   });
+  $(".progress-line").hide();
 });
 // --------------------------------------------------------------

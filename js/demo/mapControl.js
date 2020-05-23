@@ -75,6 +75,8 @@ function findCloestRoute(hospitalPos){
       alert("路网服务返回错误");
       return;
     }
+
+    $(".progress-line").hide();
     
     let result = serviceResult.result;
   
