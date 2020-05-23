@@ -14,16 +14,20 @@
    /* 地图面板在主要内容区域的高度占比 */
    --map-panel-height-percent: 96.5%;
 
+   /* 医院标记的颜色 */
    --hospital-marker-color: rgba(222, 125, 44, 0.99);
 
+   /* 医院标记的“呼吸效果”的最大型号 */
    --circle-blob-max-length: 30px;
  }
 
+ /* 默认取消全部的margin和padding */
  * {
    margin: 0px;
    padding: 0px;
  }
 
+ /* 定义最小宽度（理论上，高度对布局没影响）*/
  body {
    height: 100%;
    position: absolute;
@@ -32,11 +36,24 @@
    min-width: 800px;
  }
 
+ /* 为左侧面板的三个子面板添加下边界 */
+ #panel-hospital-query,
+ #panel-dangerous-area,
+ #panel-route-query {
+   border: none;
+   margin: 0;
+   padding: 0;
+   border-bottom: 1px solid rgba(10, 41, 107, 0.432);
+   border-radius: 0px;
+ }
+
+ /* 令鼠标指针放在某按钮上出现的浮窗能够显示全部的文字 */
  .tooltip-inner {
    max-width: none;
    white-space: nowrap;
  }
 
+ /* 页面顶部标题 */
  .top-title {
    width: 100%;
    height: var(--top-title-percent);
@@ -49,6 +66,7 @@
    min-height: var(--min-top-title-height);
  }
 
+ /* 左侧面板 */
  .box {
    float: left;
    position: absolute;
@@ -62,6 +80,7 @@
    min-height: var(--min-content-heigt);
  }
 
+ /* 控制左侧面板移动的“花型”按钮 */
  .button-left-control-pane {
    position: relative;
    left: 320px;
@@ -88,6 +107,7 @@
    opacity: 0.0;
  }
 
+ /* 核心div(页面最底层) */
  .core-div {
    position: relative;
    height: var(--content-height-percent);
@@ -95,24 +115,26 @@
    background-color: var(--main-background-color);
  }
 
+ /* 地图容器 */
  .map-panel {
    width: 100%;
    height: var(--map-panel-height-percent);
    background-color: var(--main-background-color);
  }
 
+ /* 页面底部版权模块 */
  footer {
    width: 100%;
    height: calc(1 - var(--map-panel-height-percent));
    background-color: var(--main-background-color);
  }
 
+ /* 左侧“毒气扩散区面板下的自定义圆形复选框” */
  .subpanel-dangerous-area {
    width: 100%;
    height: 50px;
  }
 
- /* Customize the label (the label-dangerous-area) */
  .label-dangerous-area {
    display: block;
    position: relative;
@@ -130,7 +152,6 @@
    text-align: center;
  }
 
- /* Hide the browser's default radio button */
  .label-dangerous-area input {
    position: absolute;
    opacity: 0;
@@ -139,7 +160,6 @@
    width: 0;
  }
 
- /* Create a custom radio button */
  .checkmark {
    position: absolute;
    top: 0;
@@ -152,29 +172,24 @@
    transform: translateY(17px);
  }
 
- /* On mouse-over, add a grey background color */
  .label-dangerous-area:hover input~.checkmark {
    background-color: #ccc;
  }
 
- /* When the radio button is checked, add a blue background */
  .label-dangerous-area input:checked~.checkmark {
    background-color: #2196F3;
  }
 
- /* Create the indicator (the dot/circle - hidden when not checked) */
  .checkmark:after {
    content: "";
    position: absolute;
    display: none;
  }
 
- /* Show the indicator (dot/circle) when checked */
  .label-dangerous-area input:checked~.checkmark:after {
    display: block;
  }
 
- /* Style the indicator (dot/circle) */
  .label-dangerous-area .checkmark:after {
    top: 50%;
    left: 50%;
@@ -185,7 +200,7 @@
    background: white;
  }
 
-
+/* “毒气扩散区分析”面板下，“取消”按钮上的那条线 */
  #label-dangerous-area-cancel::after {
    content: '';
    width: 150px;
@@ -195,6 +210,7 @@
    transform: translateX(-60%);
  }
 
+ /* 医院选择下拉菜单 */
  #hospital-select-control {
    width: 100%;
    border-radius: 0px;
@@ -218,8 +234,10 @@
    animation-timing-function: linear;
  }
 
+ /* Placeholder for custom div icon */
  .css-icon {}
 
+ /* 医院标记（呼吸效果） */
  .circle-blob {
    width: 10px;
    height: 10px;
@@ -235,12 +253,17 @@
    animation: pulse-purple 2s infinite;
  }
 
- #blob-1{}
- #blob-2{}
- #blob-3{}
- #blob-4{}
- #blob-5{}
- #blob-6{}
+ #blob-1 {}
+
+ #blob-2 {}
+
+ #blob-3 {}
+
+ #blob-4 {}
+
+ #blob-5 {}
+
+ #blob-6 {}
 
  @keyframes pulse-purple {
    0% {
@@ -259,6 +282,7 @@
    }
  }
 
+ /* 危险区域标记（雷达效果） */
  .area {
    position: absolute;
    border-radius: 50%;
@@ -274,47 +298,78 @@
 
  #area-4 {}
 
- .sweep{
-  position: absolute;
-  box-sizing: border-box;
-  /* top: -50%; left: -50%; */
-  border-right: solid 1px hsla(145, 50%, 40%, .3);
-  width: 108px; height: 108px;
-  border-radius: 100% 0 0 0;
-  transform-origin: 100% 100%;
-  background: linear-gradient(50deg, rgba(34, 34, 34, 0) 56%, hsla(145, 50%, 40%, 1));
-  animation: sweep 3s infinite linear;
+ .sweep {
+   position: absolute;
+   box-sizing: border-box;
+   /* top: -50%; left: -50%; */
+   border-right: solid 1px hsla(145, 50%, 40%, .3);
+   width: 108px;
+   height: 108px;
+   border-radius: 100% 0 0 0;
+   transform-origin: 100% 100%;
+   background: linear-gradient(50deg, rgba(34, 34, 34, 0) 56%, hsla(145, 50%, 40%, 1));
+   animation: sweep 3s infinite linear;
  }
 
- @keyframes sweep { to { transform: rotate(360deg); } }
+ @keyframes sweep {
+   to {
+     transform: rotate(360deg);
+   }
+ }
 
- .progress-line, .progress-line:before {
-  height: 3px;
-  width: 100%;
-  margin: 0;
-}
+ /* 等待查询最短路径时出现的进度条 */
+ .progress-line,
+ .progress-line:before {
+   height: 3px;
+   width: 100%;
+   margin: 0;
+ }
 
-.progress-line {
-  background-color: #b3d4fc;
-  display: -webkit-flex;
-  display: flex;
-  position: relative;
-  bottom: 10px;
-}
+ .progress-line {
+   background-color: #b3d4fc;
+   display: -webkit-flex;
+   display: flex;
+   position: relative;
+   bottom: 10px;
+ }
 
-.progress-line:before {
-  background-color: #3f51b5;
-  content: '';
-  -webkit-animation: running-progress 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  animation: running-progress 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-@-webkit-keyframes running-progress {
-  0% { margin-left: 0px; margin-right: 100%; }
-  50% { margin-left: 25%; margin-right: 0%; }
-  100% { margin-left: 100%; margin-right: 0; }
-}
-@keyframes running-progress {
-  0% { margin-left: 0px; margin-right: 100%; }
-  50% { margin-left: 25%; margin-right: 0%; }
-  100% { margin-left: 100%; margin-right: 0; }
-}
+ .progress-line:before {
+   background-color: #3f51b5;
+   content: '';
+   -webkit-animation: running-progress 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+   animation: running-progress 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+ }
+
+ @-webkit-keyframes running-progress {
+   0% {
+     margin-left: 0px;
+     margin-right: 100%;
+   }
+
+   50% {
+     margin-left: 25%;
+     margin-right: 0%;
+   }
+
+   100% {
+     margin-left: 100%;
+     margin-right: 0;
+   }
+ }
+
+ @keyframes running-progress {
+   0% {
+     margin-left: 0px;
+     margin-right: 100%;
+   }
+
+   50% {
+     margin-left: 25%;
+     margin-right: 0%;
+   }
+
+   100% {
+     margin-left: 100%;
+     margin-right: 0;
+   }
+ }

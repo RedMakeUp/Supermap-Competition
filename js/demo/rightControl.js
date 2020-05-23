@@ -1,5 +1,6 @@
 $("#button-fullWidth").click(() => {
     resetMap();
+    $('#radio-cancel').prop("checked", true);
 });
 
 $("#button-zoomIn").click(() => {

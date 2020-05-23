@@ -31,12 +31,14 @@ function resetMap(){
   removeCurrentRoute();
   removeHospitals();
   resetAllArea();
+  $("#hospital-select-control").text("请选择一家医院");
+  $("#hospital-select-control").val("请选择一家医院");
   map.setView(mapOriginCenter, 1);
 }
 // --------------------------------------------------------------
 
 
-// 移除或者添加医院标记
+// 添加,移除或更新医院标记
 // --------------------------------------------------------------
 function removeHospitals(){
   hospitals.forEach((hospital) => {
@@ -58,12 +60,34 @@ function updateHospitals(){
 // --------------------------------------------------------------
 
 
+// 添加,移除或更新扩散区域
+// --------------------------------------------------------------
+function addAreaToMap(areaName){
+  if(dangerousAreas.has(areaName)){
+    dangerousAreas.get(areaName).addToMap(map);
+  }
+}
+
+function resetAllArea(){
+  dangerousAreas.forEach((area, name) => {
+    area.removeFromMap(map);
+  });
+}
+
+function updateAreas(){
+  dangerousAreas.forEach((area, name) => {
+    area.update(map);
+  });
+}
+// --------------------------------------------------------------
+
+
 // 最近设施分析
 // --------------------------------------------------------------
 // 给定一家医院的位置，动态显示其到工厂的最短路径
 function findCloestRoute(hospitalPos){
   let findClosetFacilitiesParameter = new SuperMap.FindClosestFacilitiesParameters({
-    event: chemicalWork.latLngPos,
+    event: chemicalWorkPos,
     expectFacilityCount: 1,
     facilities: [hospitalPos],
     isAnalyzeById: false,
@@ -95,34 +119,11 @@ function findCloestRoute(hospitalPos){
     currentRoute.addTo(map).snakeIn();
   });
 }
-
 // 清除当前地图的路径
 function removeCurrentRoute(){
   if(currentRoute !== null){
     currentRoute.removeFrom(map);
     currentRoute = null;
   }
-}
-// --------------------------------------------------------------
-
-
-// 添加,移除或更新扩散区域
-// --------------------------------------------------------------
-function addAreaToMap(areaName){
-  if(dangerousAreas.has(areaName)){
-    dangerousAreas.get(areaName).addToMap(map);
-  }
-}
-
-function resetAllArea(){
-  dangerousAreas.forEach((area, name) => {
-    area.removeFromMap(map);
-  });
-}
-
-function updateAreas(){
-  dangerousAreas.forEach((area, name) => {
-    area.update(map);
-  });
 }
 // --------------------------------------------------------------

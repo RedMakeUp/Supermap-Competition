@@ -18,25 +18,25 @@ $('#radio-cancel').prop("checked", true);
 $('#radio-die').change(() => {
   resetAllArea();
   addAreaToMap("die");
-  map.flyTo(chemicalWork.latLngPos, 2);
+  map.flyTo(chemicalWorkPos, 2);
 });
 // "毒气扩散区分析-重伤区域"按钮点击
 $('#radio-severe').change(() => {
   resetAllArea();
   addAreaToMap("severe");
-  map.flyTo(chemicalWork.latLngPos, 2);
+  map.flyTo(chemicalWorkPos, 2);
 });
 // "毒气扩散区分析-轻伤区域"按钮点击
 $('#radio-minor').change(() => {
   resetAllArea();
   addAreaToMap("minor");
-  map.flyTo(chemicalWork.latLngPos, 2);
+  map.flyTo(chemicalWorkPos, 2);
 });
 // "毒气扩散区分析-吸入反应区域"按钮点击
 $('#radio-inhalation').change(() => {
   resetAllArea();
   addAreaToMap("inhalation");
-  map.flyTo(chemicalWork.latLngPos, 2);
+  map.flyTo(chemicalWorkPos, 2);
 });
 // "毒气扩散区分析-取消"按钮点击
 $('#radio-cancel').change(() => {
@@ -47,13 +47,6 @@ $('#radio-cancel').change(() => {
 
 // 最短救援路线
 // --------------------------------------------------------------
-// 初始化“最短救援路线-下拉菜单”
-let hospitalList = $("#list-hospital");
-hospitals.forEach((hospital) => {
-  hospitalList.append("<li><a style='cursor: pointer;'>" + hospital.name + "</a></li>");
-});
-hospitalList.append("<li role='separator' class='divider'></li>\n<li><a style='cursor: not-allowed; opacity: 0.8;'>请选择一家医院</a></li>")
-
 // “最短救援路线-下拉菜单”点击
 $(".dropdown-menu").on('click', 'li a', function(){
   $("#hospital-select-control").text($(this).text());
